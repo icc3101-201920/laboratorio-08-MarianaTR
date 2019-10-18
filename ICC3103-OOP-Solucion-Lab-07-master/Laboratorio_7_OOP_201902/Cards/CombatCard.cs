@@ -7,7 +7,7 @@ using System.Text;
 namespace Laboratorio_7_OOP_201902.Cards
 {
     [Serializable]
-    public class CombatCard : Card , ICharacteristics
+    public class CombatCard : Card 
     {
         //Atributos
         private int attackPoints;
@@ -46,6 +46,14 @@ namespace Laboratorio_7_OOP_201902.Cards
             }
         }
 
-        
+
+        public override List<string> GetCharacteristics()
+        {
+            List<string> caracteristicas = new List<string>() { Name, Convert.ToString(Type), Effect, Convert.ToString(AttackPoints), Convert.ToString(Hero) };
+
+            return caracteristicas;
+        }
+
+
     }
 }

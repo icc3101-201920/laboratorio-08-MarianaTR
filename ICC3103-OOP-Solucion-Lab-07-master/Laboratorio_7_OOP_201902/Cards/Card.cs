@@ -8,6 +8,7 @@ namespace Laboratorio_7_OOP_201902.Cards
 {
     [Serializable]
     public abstract class Card : ICharacteristics
+  
     {
         //Atributos
         protected string name;
@@ -55,7 +56,7 @@ namespace Laboratorio_7_OOP_201902.Cards
             }
         }
 
-        public List<string> GetCharacteristics()
+        public virtual List<string> GetCharacteristics()
         {
             throw new NotImplementedException();
         }
