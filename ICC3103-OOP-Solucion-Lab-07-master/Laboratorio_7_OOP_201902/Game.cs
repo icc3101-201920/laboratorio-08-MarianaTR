@@ -197,11 +197,13 @@ namespace Laboratorio_7_OOP_201902
 
             while (turn < 4 && !CheckIfEndGame())
             {
-                bool drawCard = false;
-                //turno 0 o configuracion
+                
+                
                 bool verificar = Visualization.ShowMenuCarga();
                 if (verificar == false)
                 {
+                    bool drawCard = false;
+                    //turno 0 o configuracion
                     if (turn == 0)
                     {
                         for (int _ = 0; _ < Players.Length; _++)
@@ -244,72 +246,76 @@ namespace Laboratorio_7_OOP_201902
                             firstOrSecondUser = ActivePlayer.Id == 0 ? 1 : 0;
                         }
                         turn += 1;
+                        Save();
                     }
-                }
 
-                //turnos siguientes
-                else
-                {
-                    while (true)
+
+                    //turnos siguientes
+                    else
                     {
-                        ActivePlayer = Players[firstOrSecondUser];
-                        //Obtener lifePoints
-                        int[] lifePoints = new int[2] { Players[0].LifePoints, Players[1].LifePoints };
-                        //Obtener total de ataque:
-                        int[] attackPoints = new int[2] { Players[0].GetAttackPoints()[0], Players[1].GetAttackPoints()[0] };
-                        //Mostrar tablero, mano y solicitar jugada
-                        Visualization.ClearConsole();
-                        Visualization.ShowBoard(boardGame, ActivePlayer.Id, lifePoints, attackPoints);
-                        //Robar carta
-                        if (!drawCard)
+                        while (true)
                         {
-                            ActivePlayer.DrawCard();
-                            drawCard = true;
-                        }
-                        Visualization.ShowHand(ActivePlayer.Hand);
-                        Visualization.ShowListOptions(new List<string> { "Play Card", "Pass" }, $"Make your move player {ActivePlayer.Id + 1}:");
-                        userInput = Visualization.GetUserInput(1);
-                        if (userInput == 0)
-                        {
-                            //Si la carta es un buff solicitar a la fila que va.
-                            Visualization.ShowProgramMessage($"Input the number of the card to play. To cancel enter -1");
-                            userInput = Visualization.GetUserInput(ActivePlayer.Hand.Cards.Count, true);
-                            if (userInput != -1)
+                            ActivePlayer = Players[firstOrSecondUser];
+                            //Obtener lifePoints
+                            int[] lifePoints = new int[2] { Players[0].LifePoints, Players[1].LifePoints };
+                            //Obtener total de ataque:
+                            int[] attackPoints = new int[2] { Players[0].GetAttackPoints()[0], Players[1].GetAttackPoints()[0] };
+                            //Mostrar tablero, mano y solicitar jugada
+                            Visualization.ClearConsole();
+                            Visualization.ShowBoard(boardGame, ActivePlayer.Id, lifePoints, attackPoints);
+                            //Robar carta
+                            if (!drawCard)
                             {
-                                if (ActivePlayer.Hand.Cards[userInput].Type == EnumType.buff)
+                                ActivePlayer.DrawCard();
+                                drawCard = true;
+                            }
+                            Visualization.ShowHand(ActivePlayer.Hand);
+                            Visualization.ShowListOptions(new List<string> { "Play Card", "Pass" }, $"Make your move player {ActivePlayer.Id + 1}:");
+                            userInput = Visualization.GetUserInput(1);
+                            if (userInput == 0)
+                            {
+                                //Si la carta es un buff solicitar a la fila que va.
+                                Visualization.ShowProgramMessage($"Input the number of the card to play. To cancel enter -1");
+                                userInput = Visualization.GetUserInput(ActivePlayer.Hand.Cards.Count, true);
+                                if (userInput != -1)
                                 {
-                                    Visualization.ShowListOptions(new List<string> { "Melee", "Range", "LongRange" }, $"Choose row to buff {ActivePlayer.Id}:");
-                                    int cardId = userInput;
-                                    userInput = Visualization.GetUserInput(2);
-                                    if (userInput == 0)
+                                    if (ActivePlayer.Hand.Cards[userInput].Type == EnumType.buff)
                                     {
-                                        ActivePlayer.PlayCard(cardId, EnumType.buffmelee);
-                                    }
-                                    else if (userInput == 1)
-                                    {
-                                        ActivePlayer.PlayCard(cardId, EnumType.buffrange);
+                                        Visualization.ShowListOptions(new List<string> { "Melee", "Range", "LongRange" }, $"Choose row to buff {ActivePlayer.Id}:");
+                                        int cardId = userInput;
+                                        userInput = Visualization.GetUserInput(2);
+                                        if (userInput == 0)
+                                        {
+                                            ActivePlayer.PlayCard(cardId, EnumType.buffmelee);
+                                        }
+                                        else if (userInput == 1)
+                                        {
+                                            ActivePlayer.PlayCard(cardId, EnumType.buffrange);
+                                        }
+                                        else
+                                        {
+                                            ActivePlayer.PlayCard(cardId, EnumType.bufflongRange);
+                                        }
                                     }
                                     else
                                     {
-                                        ActivePlayer.PlayCard(cardId, EnumType.bufflongRange);
+                                        ActivePlayer.PlayCard(userInput);
                                     }
                                 }
-                                else
+                                //Revisar si le quedan cartas, si no le quedan obligar a pasar.
+                                if (ActivePlayer.Hand.Cards.Count == 0)
                                 {
-                                    ActivePlayer.PlayCard(userInput);
+                                    firstOrSecondUser = ActivePlayer.Id == 0 ? 1 : 0;
+                                    Save();
+                                    break;
                                 }
                             }
-                            //Revisar si le quedan cartas, si no le quedan obligar a pasar.
-                            if (ActivePlayer.Hand.Cards.Count == 0)
+                            else
                             {
                                 firstOrSecondUser = ActivePlayer.Id == 0 ? 1 : 0;
+                                Save();
                                 break;
                             }
-                        }
-                        else
-                        {
-                            firstOrSecondUser = ActivePlayer.Id == 0 ? 1 : 0;
-                            break;
                         }
                     }
                     //Cambiar al oponente si no ha jugado

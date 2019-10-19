@@ -35,6 +35,29 @@ namespace Laboratorio_7_OOP_201902.Static
             for (int i = 0; i<decks.Count; i++)
             {
                 Console.WriteLine($"({i}) Deck {i+1}");
+                foreach(Card card in decks[i].Cards)
+                {
+                    Console.WriteLine();
+                    if(card.Type == EnumType.melee || card.Type == EnumType.range || card.Type == EnumType.longRange)
+                    {
+                        CombatCard nuevo = (CombatCard)card;
+                        List<string> caracteristica = nuevo.GetCharacteristics();
+                        foreach (string mensaje in caracteristica)
+                        {
+                            ShowProgramMessage(mensaje);
+                        }
+                    }
+                    else
+                    {
+                        SpecialCard nuevoSpecial = (SpecialCard)card;
+                        List<string> caracteristic = nuevoSpecial.GetCharacteristics();
+                        foreach (string mensse in caracteristic)
+                        {
+                            ShowProgramMessage(mensse);
+                        }
+                    }
+                    Console.WriteLine();
+                }
             }
         }
         public static void ShowCaptains(List<SpecialCard> captains)
@@ -43,6 +66,16 @@ namespace Laboratorio_7_OOP_201902.Static
             for (int i = 0; i < captains.Count; i++)
             {
                 Console.WriteLine($"({i}) {captains[i].Name}: {captains[i].Effect}");
+                Console.WriteLine();
+                foreach (SpecialCard card in captains)
+                {
+                    List<string> caracteristic = card.GetCharacteristics();
+                    foreach (string mensa in caracteristic)
+                    {
+                        ShowProgramMessage(mensa);
+                    }
+                    Console.WriteLine();
+                }
             }
         }
         public static int GetUserInput(int maxInput, bool stopper = false)
