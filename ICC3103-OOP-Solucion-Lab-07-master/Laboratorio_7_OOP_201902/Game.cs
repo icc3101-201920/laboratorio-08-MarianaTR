@@ -193,6 +193,7 @@ namespace Laboratorio_7_OOP_201902
             int firstOrSecondUser = ActivePlayer.Id == 0 ? 0 : 1;
             int winner = -1;
             bool bothPlayersPlayed = false;
+            int contadorDeCambios = 0;
             
 
             while (turn < 4 && !CheckIfEndGame())
@@ -231,19 +232,68 @@ namespace Laboratorio_7_OOP_201902
                             userInput = Visualization.GetUserInput(1);
                             if (userInput == 0)
                             {
-                                Visualization.ClearConsole();
-                                Visualization.ShowProgramMessage($"Player {ActivePlayer.Id + 1} change cards:");
-                                Visualization.ShowHand(ActivePlayer.Hand);
-                                for (int i = 0; i < DEFAULT_CHANGE_CARDS_NUMBER; i++)
+                                if (contadorDeCambios < 3)
                                 {
-                                    Visualization.ShowProgramMessage($"Input the numbers of the cards to change (max {DEFAULT_CHANGE_CARDS_NUMBER}). To stop enter -1");
-                                    userInput = Visualization.GetUserInput(ActivePlayer.Hand.Cards.Count, true);
-                                    if (userInput == -1) break;
-                                    ActivePlayer.ChangeCard(userInput);
+
+                                    Visualization.ClearConsole();
+                                    Visualization.ShowProgramMessage($"Player {ActivePlayer.Id + 1} change cards:");
                                     Visualization.ShowHand(ActivePlayer.Hand);
+                                    for (int i = 0; i < DEFAULT_CHANGE_CARDS_NUMBER; i++)
+                                    {
+                                        Visualization.ShowProgramMessage($"Input the numbers of the cards to change (max {DEFAULT_CHANGE_CARDS_NUMBER}). To stop enter -1");
+                                        userInput = Visualization.GetUserInput(ActivePlayer.Hand.Cards.Count, true);
+                                        if (userInput == -1) break;
+                                        ActivePlayer.ChangeCard(userInput);
+                                        Visualization.ShowHand(ActivePlayer.Hand);
+                                    }
+                                }
+                                else
+                                {
+                                    Visualization.ShowProgramMessage("Ya no puedes hacer mas cambios");
+                                    Visualization.ShowProgramMessage("Presiona una tecla para continuar");
+                                    Console.ReadKey();
+                                    Visualization.ClearConsole();
                                 }
                             }
-                            firstOrSecondUser = ActivePlayer.Id == 0 ? 1 : 0;
+                            else if (userInput == 1)
+                            {
+                                Visualization.ClearConsole();
+                                Visualization.ShowHand(activePlayer.Hand);
+                                Visualization.ShowProgramMessage("Ingrese el id de la carta para ver la informacion de esta");
+                                userInput = Visualization.GetUserInput(activePlayer.Hand.Cards.Count, true);
+                                if (userInput != -1)
+                                {
+
+                                    if (activePlayer.Hand.Cards[userInput] is CombatCard)
+                                    {
+                                        CombatCard card = activePlayer.Hand.Cards[userInput] as CombatCard;
+                                        List<string> componente = new List<string>() { "Name: ", "Type: ", "Effect: ", "Attack Points: ", "Hero: " };
+                                        int i = 0;
+                                        foreach (string com in componente)
+                                        {
+                                            Visualization.ShowProgramMessage(com + card.GetCharacteristics()[i]);
+                                            i++;
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        SpecialCard card = activePlayer.Hand.Cards[userInput] as SpecialCard;
+                                        List<string> componente = new List<string>() { "Name: ", "Type: ", "Effect: ", "Buff: " };
+                                        int i = 0;
+                                        foreach (string co in componente)
+                                        {
+                                            Visualization.ShowProgramMessage(co + card.GetCharacteristics()[i]);
+                                            i++;
+                                        }
+                                    }
+                                }
+                            }
+                            else if (userInput == 2)
+                            {
+                                firstOrSecondUser = ActivePlayer.Id == 0 ? 1 : 0;
+                            }
+                            contadorDeCambios = 0;
                         }
                         turn += 1;
                         Save();
@@ -310,12 +360,48 @@ namespace Laboratorio_7_OOP_201902
                                     break;
                                 }
                             }
-                            else
+                            else if (userInput == 1)
+                            {
+                                Visualization.ClearConsole();
+                                Visualization.ShowHand(activePlayer.Hand);
+                                Visualization.ShowProgramMessage("Ingrese el id de la carta para ver la informacion de esta");
+                                userInput = Visualization.GetUserInput(activePlayer.Hand.Cards.Count, true);
+                                if (userInput != -1)
+                                {
+                                    if (activePlayer.Hand.Cards[userInput] is CombatCard)
+                                    {
+                                        CombatCard card = activePlayer.Hand.Cards[userInput] as CombatCard;
+                                        List<string> componente = new List<string>() { "Name: ", "Type: ", "Effect: ", "Attack Points: ", "Hero: " };
+                                        int i = 0;
+                                        foreach (string com in componente)
+                                        {
+                                            Visualization.ShowProgramMessage(com + card.GetCharacteristics()[i]);
+                                            i++;
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        SpecialCard card = activePlayer.Hand.Cards[userInput] as SpecialCard;
+                                        List<string> componente = new List<string>() { "Name: ", "Type: ", "Effect: ", "Buff: " };
+                                        int i = 0;
+                                        foreach (string co in componente)
+                                        {
+                                            Visualization.ShowProgramMessage(co + card.GetCharacteristics()[i]);
+                                            i++;
+                                        }
+                                    }
+                                }
+
+
+                            }
+                            else if (userInput == 2)
                             {
                                 firstOrSecondUser = ActivePlayer.Id == 0 ? 1 : 0;
                                 Save();
                                 break;
                             }
+                            
                         }
                     }
                     //Cambiar al oponente si no ha jugado
